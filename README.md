@@ -1,6 +1,6 @@
 # In-memory-Authentication
 
-A Quick Spring Security in-memory authentication Application.
+A quick Spring Security in-memory authentication Application.
 
 This application was created to test how Spring security matches entered password with the one in database. 
 
