@@ -17,3 +17,7 @@ Since this project has devtools as dependencies, you can view what's inside the 
 http://localhost:8080/h2-console
 
 Keep everything default but change JDBC URL to jdbc:h2:mem:testdb
+
+Enter gradlew bootRun in CMD to run the application. 
+
+Go to localhost:8080/register to register and localhost:8080/login to login. 
