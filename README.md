@@ -43,3 +43,22 @@ But if we had different tables and schema, there is a way to tell Spring Securit
                 "where username=?");
     }
 
+Another way is to use custom UserDetailsService. In it, implement UserDetailsService and override UserByUsername method like below 
+
+    @Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepo.findByUsername(username);
+		if (user != null) {
+			return user;
+		}
+		throw new UsernameNotFoundException("User '" + username + "' not found");
+	}
+
+and inject custom UserDetailsService into a class that extends WebSecurityConfigurerAdapter and overrides configure(AuthenticationManagerBuilder auth) method like this:
+
+    @Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
+	}
+    
+This way, we can use custom JDBC tables/schemas, or just use totally different user store, like mongodb in a different example here https://github.com/farazdurrani/Spring-Security-Mongodb-as-DataStore
