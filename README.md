@@ -1,4 +1,4 @@
-# In-memory-Authentication
+# Spring Security JDBC-based user store
 
 A quick Spring Security in-memory authentication Application.
 
@@ -21,3 +21,25 @@ Keep everything default but change JDBC URL to jdbc:h2:mem:testdb
 Enter gradlew bootRun in CMD to run the application. 
 
 Go to localhost:8080/register to register and localhost:8080/login to login. 
+
+Spring, by default, expects below tables and schema to be present in database:
+
+    select username,password,enabled from users where username = ?;
+    select username,authority from authorities where username = ?;
+    select g.id, g.group_name, ga.authority from groups g, group_members gm, group_authorities ga where gm.username = ? and g.id = ga.group_id and g.id = gm.group_id;
+
+But if we had different tables and schema, there is a way to tell Spring Security to use that instead:
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      auth
+          .jdbcAuthentication()
+          .dataSource(dataSource)
+          .usersByUsernameQuery(
+                "select username, password MySpecialTable " +
+                "where username=?")
+          .authoritiesByUsernameQuery(
+                "select username, authority from MySecondSpecialTable " +
+                "where username=?");
+    }
+
